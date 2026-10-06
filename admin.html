@@ -32,18 +32,19 @@ header p{font-size:10px;color:var(--brand);letter-spacing:2px;font-weight:600}
 .pill.closed{color:var(--off);border-color:#5a2a26}.pill.closed::before{background:var(--off)}
 main{max-width:680px;margin:0 auto;padding:6px 14px 90px}
 .banner{margin-top:14px;background:var(--panel);border:1px solid var(--brand);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--brand)}
-.jump{display:flex;gap:8px;position:sticky;top:67px;z-index:9;padding:12px 0 8px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(var(--bg) 78%,transparent)}
+.jump{display:flex;gap:8px;position:sticky;top:var(--hh,67px);z-index:9;padding:12px 0 8px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(var(--bg) 78%,transparent)}
 .jump::-webkit-scrollbar{display:none}
 .jump button{flex:none;background:var(--panel-2);color:var(--muted);font-size:13px;font-weight:500;padding:9px 16px;border-radius:999px;transition:.15s;white-space:nowrap}
 .jump button:hover{color:var(--text)}
 .jump button.on{background:var(--brand);color:var(--on-brand);font-weight:700}
 /* Acordeones */
-.acc{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-top:12px;scroll-margin-top:136px;overflow:hidden}
+.acc{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-top:12px;scroll-margin-top:calc(var(--sh,125px) + 4px);overflow:clip}
 .acc>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;font-family:var(--f-h);font-style:italic;font-size:22px;text-transform:uppercase;user-select:none}
 .acc>summary::-webkit-details-marker{display:none}
 .acc>summary small{margin-left:auto;font-family:var(--f);font-style:normal;text-transform:none;color:var(--muted);font-size:12px;font-weight:400;text-align:right}
-.acc>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--brand);border-bottom:2px solid var(--brand);transform:rotate(45deg);transition:transform .2s;margin:-4px 2px 0 6px;flex:none}
-.acc[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+.acc>summary::after{content:"Abrir";flex:none;margin-left:8px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--brand);color:var(--brand);font:700 13px var(--f);font-style:normal;text-transform:none}
+.acc[open]>summary::after{content:"Cerrar";background:var(--brand);color:var(--on-brand)}
+.acc[open]>summary{position:sticky;top:var(--sh,125px);z-index:8;background:var(--panel);border-bottom:1px solid var(--line)}
 .accb{padding:0 12px 14px}
 .empty{color:var(--muted);font-size:14px;text-align:center;padding:18px 0}
 /* Ítems */
@@ -119,6 +120,63 @@ dialog p{font-size:14px}
 select.txt{height:46px;padding:0 42px 0 14px;font-weight:600;cursor:pointer;appearance:none;-webkit-appearance:none;border-radius:12px;background:var(--panel-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23FFC107' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 14px center}
 select.txt:hover,select.txt:focus{border-color:var(--brand)}select.txt:focus{box-shadow:0 0 0 3px rgba(255,193,7,.22)}
 select.txt option{background:#1A1A1A;color:var(--text)}
+
+/* ===== v5 · Animaciones de botones y carruseles (solo CSS) ===== */
+:root{--aq-e:cubic-bezier(.2,.7,.2,1)}
+
+/* Base de botones importantes */
+.btn,.add,.cart-btn,.wa,.save,.add-btn,.ghost,.wchips button{position:relative;overflow:hidden;isolation:isolate;transition:transform .18s var(--aq-e),box-shadow .2s,background-color .2s,filter .2s}
+
+/* Destello que cruza el botón (hover/foco) */
+.btn::after,.add:not(:disabled)::after,.cart-btn::after,.wa:not(:disabled)::after,.save:not(:disabled)::after,.add-btn::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.38) 50%,transparent 65%);transform:translateX(-130%);transition:transform .7s var(--aq-e)}
+.btn:focus-visible::after,.add:not(:disabled):focus-visible::after,.cart-btn:focus-visible::after,.wa:not(:disabled):focus-visible::after,.save:not(:disabled):focus-visible::after,.add-btn:focus-visible::after{transform:translateX(130%)}
+@media(hover:hover){
+  .btn:hover::after,.add:not(:disabled):hover::after,.cart-btn:hover::after,.wa:not(:disabled):hover::after,.save:not(:disabled):hover::after,.add-btn:hover::after{transform:translateX(130%)}
+  .btn:hover,.add:not(:disabled):hover,.save:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,193,7,.28)}
+  .wa:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,211,102,.32)}
+  .ghost:hover,.wchips button:hover{transform:translateY(-1px)}
+}
+/* Presionar */
+.btn:active,.add:not(:disabled):active,.cart-btn:active,.wa:not(:disabled):active,.save:not(:disabled):active,.add-btn:active,.ghost:active,.wchips button:active{transform:scale(.96)}
+
+/* Botones principales: destello periódico + halo suave */
+@keyframes aqShine{0%,68%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+@keyframes aqGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,193,7,0)}50%{box-shadow:0 0 0 8px rgba(255,193,7,.16)}}
+.btn::after,.build-card .add::after,.promo .add::after,.cart-btn::after,.wa:not(:disabled)::after,.save.wide:not(:disabled)::after{animation:aqShine 4.8s var(--aq-e) infinite}
+.btn,.build-card .add,.promo .add,.cart-btn,.save.wide:not(:disabled){animation:aqGlow 2.8s ease-in-out infinite}
+
+/* Interruptores del panel con rebote */
+.sw::after{transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s}
+
+/* Carruseles de categorías: entrada escalonada + anillo en la activa */
+@keyframes aqChipIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes aqRing{from{box-shadow:0 0 0 0 rgba(255,193,7,.55)}to{box-shadow:0 0 0 7px rgba(255,193,7,0)}}
+.chip,.jump button{animation:aqChipIn .55s var(--aq-e) both}
+.chip:nth-child(2),.jump button:nth-child(2){animation-delay:.06s}
+.chip:nth-child(3),.jump button:nth-child(3){animation-delay:.12s}
+.chip:nth-child(4),.jump button:nth-child(4){animation-delay:.18s}
+.chip:nth-child(5),.jump button:nth-child(5){animation-delay:.24s}
+.chip:nth-child(n+6),.jump button:nth-child(n+6){animation-delay:.3s}
+.chip.on,.jump button.on{position:relative}
+.chip.on::before,.jump button.on::before{content:"";position:absolute;inset:0;border-radius:inherit;animation:aqRing 2.4s ease-out infinite;pointer-events:none}
+
+/* Pista de deslizamiento: partículas suaves + flecha en el borde derecho */
+@keyframes aqDrift{to{background-position:-60px 0,-90px 0,-45px 0}}
+@keyframes aqBlink{0%,100%{opacity:.5}50%{opacity:1}}
+.cats.more::after,.jump::after{content:"›";display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font:700 26px/1 var(--f);color:var(--brand);pointer-events:none;width:72px;
+  background:radial-gradient(circle at 6px 30%,rgba(255,193,7,.9) 0 1.6px,transparent 2.6px) 0 0/40px 100% repeat-x,
+             radial-gradient(circle at 14px 62%,rgba(255,255,255,.7) 0 1.2px,transparent 2.2px) 0 0/52px 100% repeat-x,
+             radial-gradient(circle at 9px 82%,rgba(255,193,7,.6) 0 1px,transparent 2px) 0 0/31px 100% repeat-x;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%);
+  animation:aqDrift 3s linear infinite,aqBlink 1.8s ease-in-out infinite}
+.cats.more::after{position:absolute;right:0;top:0;bottom:0}                 /* tienda */
+.jump::after{flex:none;position:sticky;right:0;margin-left:-72px;align-self:stretch}   /* panel */
+
+/* Accesibilidad: sin movimiento si el usuario lo prefiere */
+@media(prefers-reduced-motion:reduce){
+  .btn,.add,.cart-btn,.wa,.save,.add-btn,.chip,.jump button,.build-card .add,.promo .add{animation:none!important}
+  .btn::after,.add::after,.cart-btn::after,.wa::after,.save::after,.add-btn::after,.chip.on::before,.jump button.on::before,.cats.more::after,.jump::after{animation:none!important}
+}
 </style>
 </head>
 <body>
@@ -191,7 +249,7 @@ const DB_URL = FIREBASE.databaseURL;     // vacío = modo demostración (no guar
 const ROOT = 'aniquilador';
 /* Cloudinary (opcional): si completas ambos datos, las fotos se suben allí y se guarda la URL.
    Si quedan vacíos, la foto se reduce y se guarda dentro de Firebase (base64). */
-const CLOUD = {cloud:'', preset:''};
+const CLOUD = {cloud:'dkszomv2f', preset:'aniquilador'};
 
 const DAYS = ['dom','lun','mar','mie','jue','vie','sab'];
 const DAY_NAMES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
@@ -306,13 +364,13 @@ function paintSec(sec){
 }
 function buildShell(){
   $('#jump').innerHTML = [...SECTIONS.map(s => `<button data-go="${s.id}">${s.t}</button>`), '<button data-go="sCfg">⚙️ Bot y horarios</button>'].join('');
-  $('#secs').innerHTML = SECTIONS.map((s, i) => `<details class="acc" id="${s.id}" ${i === 0 ? 'open' : ''}><summary>${s.t}<small id="c-${s.id}"></small></summary>
+  $('#secs').innerHTML = SECTIONS.map((s, i) => `<details class="acc" id="${s.id}" ><summary>${s.t}<small id="c-${s.id}"></small></summary>
     <div class="accb"><div id="l-${s.id}"></div><button class="add-btn" data-new="${s.id}">+ Nuevo ítem</button></div></details>`).join('')
     + `<details class="acc" id="sCfg"><summary>⚙️ Configuración del Bot y Horarios<small id="c-cfg"></small></summary><div class="accb cfg" id="cfg"></div></details>`;
 }
 $('#jump').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if(!b) return;
   document.querySelectorAll('#jump button').forEach(x => x.classList.toggle('on', x === b));
-  const d = document.getElementById(b.dataset.go); d.open = true; d.scrollIntoView({behavior:'smooth', block:'start'}); });
+  const d = document.getElementById(b.dataset.go); document.querySelectorAll('details.acc').forEach(x => x.open = x === d); d.scrollIntoView({behavior:'smooth', block:'start'}); });
 
 /* Confirmación en modal oscuro */
 function ask(msg){ return new Promise(res => { const d = $('#dConfirm'); $('#cMsg').textContent = msg; d.returnValue = 'cancel'; d.onclose = () => res(d.returnValue === 'ok'); d.showModal(); }); }
@@ -391,7 +449,7 @@ function paintCfg(){
         return `<div class="hrow ${h.abierto ? '' : 'off'}" data-s="${id}" data-d="${k}"><span class="dn">${DAY_NAMES[i]}</span>
         <button type="button" class="sw" role="switch" aria-checked="${!!h.abierto}" data-h="abierto" aria-label="${nm} ${DAY_NAMES[i]} abierto"></button>
         <input type="time" value="${h.desde || '12:00'}" data-h="desde" aria-label="Abre"><input type="time" value="${h.hasta || '22:00'}" data-h="hasta" aria-label="Cierra"></div>`; }).join('')
-      + `<label class="f">WhatsApp de ${nm} (pedidos y consultas)<div class="inp"><span>+</span><input type="tel" inputmode="numeric" data-w="${id}" value="${esc(sc.whatsapp)}" placeholder="56950029656"></div></label>`; }).join('')
+      + `<label class="f">WhatsApp de ${nm} (pedidos y consultas)<div class="inp"><span>+</span><input type="tel" inputmode="numeric" data-w="${id}" value="${esc(sc.whatsapp)}" placeholder="56950029656"></div></label><br><br><br><br>`; }).join('')
     + `<h4>Textos del bot</h4>
     <label class="f">Zona de despacho (opcional)<textarea class="txt" data-c="despacho" rows="2" placeholder="Ej: Despachamos en Ñuñoa y Renca…">${esc(c.despacho || '')}</textarea></label>
     <label class="f">Medios de pago (opcional)<textarea class="txt" data-c="pagos" rows="2" placeholder="Ej: Efectivo, transferencia y tarjeta">${esc(c.pagos || '')}</textarea></label>
@@ -463,6 +521,8 @@ $('#fLogin').onsubmit = async e => {
   catch(err){ $('#lErr').textContent = /TOO_MANY/.test(String(err.message)) ? 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.' : 'Correo o contraseña incorrectos.'; }
   b.disabled = false;
 };
+const fit = () => { const h = document.querySelector('header').offsetHeight, j = $('#jump').offsetHeight, r = document.documentElement.style; r.setProperty('--hh', h + 'px'); r.setProperty('--sh', (h + j) + 'px'); };
+fit(); addEventListener('resize', fit); if(window.ResizeObserver){ const ro = new ResizeObserver(fit); ro.observe(document.querySelector('header')); ro.observe($('#jump')); }
 boot();
 </script>
 </body>

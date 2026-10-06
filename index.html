@@ -317,6 +317,62 @@ select option{background:#1A1A1A;color:var(--ink)}
 .pbody p{color:#d4d4d4;margin-bottom:18px;max-width:46ch}
 .pbody .add{padding:0 28px}
 @media(max-width:600px){#promoHero{margin-top:24px}.promo{border-radius:16px}}
+/* ===== v5 · Animaciones de botones y carruseles (solo CSS) ===== */
+:root{--aq-e:cubic-bezier(.2,.7,.2,1)}
+
+/* Base de botones importantes */
+.btn,.add,.cart-btn,.wa,.save,.add-btn,.ghost,.wchips button{position:relative;overflow:hidden;isolation:isolate;transition:transform .18s var(--aq-e),box-shadow .2s,background-color .2s,filter .2s}
+
+/* Destello que cruza el botón (hover/foco) */
+.btn::after,.add:not(:disabled)::after,.cart-btn::after,.wa:not(:disabled)::after,.save:not(:disabled)::after,.add-btn::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.38) 50%,transparent 65%);transform:translateX(-130%);transition:transform .7s var(--aq-e)}
+.btn:focus-visible::after,.add:not(:disabled):focus-visible::after,.cart-btn:focus-visible::after,.wa:not(:disabled):focus-visible::after,.save:not(:disabled):focus-visible::after,.add-btn:focus-visible::after{transform:translateX(130%)}
+@media(hover:hover){
+  .btn:hover::after,.add:not(:disabled):hover::after,.cart-btn:hover::after,.wa:not(:disabled):hover::after,.save:not(:disabled):hover::after,.add-btn:hover::after{transform:translateX(130%)}
+  .btn:hover,.add:not(:disabled):hover,.save:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,193,7,.28)}
+  .wa:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,211,102,.32)}
+  .ghost:hover,.wchips button:hover{transform:translateY(-1px)}
+}
+/* Presionar */
+.btn:active,.add:not(:disabled):active,.cart-btn:active,.wa:not(:disabled):active,.save:not(:disabled):active,.add-btn:active,.ghost:active,.wchips button:active{transform:scale(.96)}
+
+/* Botones principales: destello periódico + halo suave */
+@keyframes aqShine{0%,68%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+@keyframes aqGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,193,7,0)}50%{box-shadow:0 0 0 8px rgba(255,193,7,.16)}}
+.btn::after,.build-card .add::after,.promo .add::after,.cart-btn::after,.wa:not(:disabled)::after,.save.wide:not(:disabled)::after{animation:aqShine 4.8s var(--aq-e) infinite}
+.btn,.build-card .add,.promo .add,.cart-btn,.save.wide:not(:disabled){animation:aqGlow 2.8s ease-in-out infinite}
+
+/* Interruptores del panel con rebote */
+.sw::after{transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s}
+
+/* Carruseles de categorías: entrada escalonada + anillo en la activa */
+@keyframes aqChipIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes aqRing{from{box-shadow:0 0 0 0 rgba(255,193,7,.55)}to{box-shadow:0 0 0 7px rgba(255,193,7,0)}}
+.chip,.jump button{animation:aqChipIn .55s var(--aq-e) both}
+.chip:nth-child(2),.jump button:nth-child(2){animation-delay:.06s}
+.chip:nth-child(3),.jump button:nth-child(3){animation-delay:.12s}
+.chip:nth-child(4),.jump button:nth-child(4){animation-delay:.18s}
+.chip:nth-child(5),.jump button:nth-child(5){animation-delay:.24s}
+.chip:nth-child(n+6),.jump button:nth-child(n+6){animation-delay:.3s}
+.chip.on,.jump button.on{position:relative}
+.chip.on::before,.jump button.on::before{content:"";position:absolute;inset:0;border-radius:inherit;animation:aqRing 2.4s ease-out infinite;pointer-events:none}
+
+/* Pista de deslizamiento: partículas suaves + flecha en el borde derecho */
+@keyframes aqDrift{to{background-position:-60px 0,-90px 0,-45px 0}}
+@keyframes aqBlink{0%,100%{opacity:.5}50%{opacity:1}}
+.cats.more::after,.jump::after{content:"›";display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font:700 26px/1 var(--f);color:var(--brand);pointer-events:none;width:72px;
+  background:radial-gradient(circle at 6px 30%,rgba(255,193,7,.9) 0 1.6px,transparent 2.6px) 0 0/40px 100% repeat-x,
+             radial-gradient(circle at 14px 62%,rgba(255,255,255,.7) 0 1.2px,transparent 2.2px) 0 0/52px 100% repeat-x,
+             radial-gradient(circle at 9px 82%,rgba(255,193,7,.6) 0 1px,transparent 2px) 0 0/31px 100% repeat-x;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%);
+  animation:aqDrift 3s linear infinite,aqBlink 1.8s ease-in-out infinite}
+.cats.more::after{position:absolute;right:0;top:0;bottom:0}                 /* tienda */
+.jump::after{flex:none;position:sticky;right:0;margin-left:-72px;align-self:stretch}   /* panel */
+
+/* Accesibilidad: sin movimiento si el usuario lo prefiere */
+@media(prefers-reduced-motion:reduce){
+  .btn,.add,.cart-btn,.wa,.save,.add-btn,.chip,.jump button,.build-card .add,.promo .add{animation:none!important}
+  .btn::after,.add::after,.cart-btn::after,.wa::after,.save::after,.add-btn::after,.chip.on::before,.jump button.on::before,.cats.more::after,.jump::after{animation:none!important}
+}
 </style>
 </head>
 <body>
